@@ -413,11 +413,91 @@
     margin-top: 12px;
   }
 
+  /* Inspiration Section */
+  .inspiration {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .inspiration-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 16px 0;
+    border: none;
+    background: none;
+    color: var(--dourado);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    width: 100%;
+    text-align: left;
+  }
+
+  .inspiration-toggle:hover {
+    color: var(--dourado-claro);
+  }
+
+  .inspiration-toggle .arrow {
+    transition: transform 0.3s ease;
+    font-size: 0.75rem;
+  }
+
+  .inspiration-toggle.open .arrow {
+    transform: rotate(90deg);
+  }
+
+  .inspiration-content {
+    display: none;
+    padding-bottom: 8px;
+  }
+
+  .inspiration-content.open {
+    display: block;
+  }
+
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .prompt-card {
+    background: rgba(201, 169, 78, 0.04);
+    border: 1px solid rgba(201, 169, 78, 0.12);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: rgba(250, 250, 248, 0.75);
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+
+  .prompt-card:hover {
+    background: rgba(201, 169, 78, 0.08);
+    border-color: rgba(201, 169, 78, 0.25);
+    color: var(--branco);
+  }
+
+  .prompt-card .prompt-cat {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--dourado);
+    margin-bottom: 4px;
+  }
+
   /* Responsive */
   @media (max-width: 540px) {
     .categories { grid-template-columns: 1fr; }
     .hero { padding: 40px 20px 32px; min-height: auto; }
     .form-container { padding: 0 16px 60px; }
+    .inspiration { padding: 0 16px 40px; }
   }
 
   /* Hidden */
@@ -438,6 +518,49 @@
     para que nenhuma memória se perca. Se és benfiquista e tens conhecimento, 
     histórias ou factos sobre o clube, a tua contribuição é preciosa.
   </p>
+</div>
+
+<div class="inspiration">
+  <button class="inspiration-toggle" onclick="toggleInspiration()" id="inspirationToggle">
+    <span class="arrow">▶</span>
+    Não sabes o que escrever? Aqui vão algumas ideias para te inspirar
+  </button>
+  <div class="inspiration-content" id="inspirationContent">
+    <div class="prompt-grid">
+      <div class="prompt-card">
+        <div class="prompt-cat">Jogadores</div>
+        Qual foi o jogador do Benfica que mais te marcou? O que é que ele tinha de especial? Lembras-te de algum momento ou jogo específico dele?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Momentos</div>
+        Qual foi o momento mais emocionante que viveste como benfiquista? Um golo, um título, um jogo que nunca vais esquecer?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Estádio</div>
+        Lembras-te da Luz antiga? Como era o ambiente? Se só conheces a Luz nova, qual é a tua memória mais forte lá dentro?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Família</div>
+        Como é que te tornaste benfiquista? Quem te levou ao estádio pela primeira vez? Há alguma história de família ligada ao Benfica?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Épocas</div>
+        Lembras-te de alguma época particularmente especial ou dramática? O que aconteceu? Quem eram as figuras principais?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Factos</div>
+        Sabes algum facto histórico sobre o Benfica que a maioria das pessoas desconhece? Curiosidades, bastidores, histórias menos conhecidas?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Modalidades</div>
+        Acompanhas alguma modalidade do Benfica? Hóquei, andebol, voleibol, futsal? Que momentos ou atletas merecem ser lembrados?
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-cat">Cultura</div>
+        O que é que ser benfiquista significa para ti? Há alguma tradição, cântico ou ritual que faça parte da tua vivência como adepto?
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="form-container">
@@ -605,6 +728,13 @@
 <script>
   let selectedCategory = null;
   let selectedEras = [];
+
+  function toggleInspiration() {
+    const toggle = document.getElementById('inspirationToggle');
+    const content = document.getElementById('inspirationContent');
+    toggle.classList.toggle('open');
+    content.classList.toggle('open');
+  }
 
   function selectCategory(el) {
     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
