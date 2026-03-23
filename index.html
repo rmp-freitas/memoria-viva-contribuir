@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memória Viva — Contribui com a tua memória benfiquista</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vermelho: #E31937;
+    --vermelho-escuro: #B01030;
+    --vermelho-profundo: #8A0C24;
+    --dourado: #C9A94E;
+    --dourado-claro: #E8D48B;
+    --branco: #FAFAF8;
+    --cinza-claro: #F0EFED;
+    --cinza: #8A8A8A;
+    --cinza-escuro: #2A2A2A;
+    --preto: #1A1A1A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--preto);
+    color: var(--branco);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 40px;
+    background: 
+      radial-gradient(ellipse at 50% 0%, rgba(227, 25, 55, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(201, 169, 78, 0.08) 0%, transparent 50%),
+      var(--preto);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--vermelho), var(--dourado), var(--vermelho), transparent);
+  }
+
+  .eagle-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+    opacity: 0.9;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--branco) 40%, var(--dourado-claro) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--dourado);
+    margin-bottom: 32px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero p {
+    max-width: 600px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(250, 250, 248, 0.7);
+    font-weight: 300;
+  }
+
+  .hero p strong {
+    color: var(--branco);
+    font-weight: 600;
+  }
+
+  /* Form Container */
+  .form-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Category Selection */
+  .category-section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--branco);
+  }
+
+  .section-hint {
+    font-size: 0.9rem;
+    color: var(--cinza);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+  }
+
+  .category-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .category-btn:hover {
+    background: rgba(227, 25, 55, 0.08);
+    border-color: rgba(227, 25, 55, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .category-btn.selected {
+    background: rgba(227, 25, 55, 0.15);
+    border-color: var(--vermelho);
+    box-shadow: 0 0 20px rgba(227, 25, 55, 0.1);
+  }
+
+  .category-btn .cat-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .category-btn .cat-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .category-btn .cat-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--branco);
+  }
+
+  .category-btn .cat-desc {
+    font-size: 0.8rem;
+    color: var(--cinza);
+    line-height: 1.4;
+  }
+
+  .category-btn.selected .cat-name { color: var(--branco); }
+  .category-btn.selected .cat-desc { color: rgba(250,250,248,0.6); }
+
+  /* Form Fields */
+  .form-section {
+    margin-bottom: 36px;
+    animation: fadeInUp 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .field-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: var(--branco);
+    display: block;
+  }
+
+  .field-hint {
+    font-size: 0.82rem;
+    color: var(--cinza);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .field-input,
+  .field-textarea,
+  .field-select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    color: var(--branco);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .field-input:focus,
+  .field-textarea:focus,
+  .field-select:focus {
+    border-color: var(--vermelho);
+    background: rgba(227, 25, 55, 0.05);
+    box-shadow: 0 0 0 3px rgba(227, 25, 55, 0.1);
+  }
+
+  .field-input::placeholder,
+  .field-textarea::placeholder {
+    color: rgba(255,255,255,0.25);
+  }
+
+  .field-textarea {
+    min-height: 160px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .field-textarea.large {
+    min-height: 240px;
+  }
+
+  .field-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A8A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+
+  .field-select option {
+    background: var(--cinza-escuro);
+    color: var(--branco);
+  }
+
+  /* Era Pills */
+  .era-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .era-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    color: var(--cinza);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .era-pill:hover {
+    background: rgba(227, 25, 55, 0.08);
+    border-color: rgba(227, 25, 55, 0.3);
+    color: var(--branco);
+  }
+
+  .era-pill.selected {
+    background: rgba(227, 25, 55, 0.2);
+    border-color: var(--vermelho);
+    color: var(--branco);
+    font-weight: 500;
+  }
+
+  /* Submit */
+  .submit-section {
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  .submit-btn {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-escuro) 100%);
+    color: var(--branco);
+    box-shadow: 0 4px 24px rgba(227, 25, 55, 0.3);
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 32px rgba(227, 25, 55, 0.4);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .submit-note {
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--cinza);
+    line-height: 1.5;
+  }
+
+  /* Success State */
+  .success-message {
+    text-align: center;
+    padding: 60px 24px;
+    animation: fadeInUp 0.5s ease forwards;
+  }
+
+  .success-message .check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--vermelho), var(--vermelho-escuro));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 1.8rem;
+  }
+
+  .success-message h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .success-message p {
+    color: var(--cinza);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .success-message .another-btn {
+    margin-top: 32px;
+    padding: 12px 32px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    color: var(--branco);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .success-message .another-btn:hover {
+    border-color: var(--vermelho);
+    background: rgba(227, 25, 55, 0.08);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--cinza);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .footer a {
+    color: var(--dourado);
+    text-decoration: none;
+  }
+
+  .footer .lema {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(201, 169, 78, 0.6);
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 540px) {
+    .categories { grid-template-columns: 1fr; }
+    .hero { padding: 40px 20px 32px; min-height: auto; }
+    .form-container { padding: 0 16px 60px; }
+  }
+
+  /* Hidden */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <svg class="eagle-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="38" stroke="rgba(201,169,78,0.3)" stroke-width="1"/>
+    <text x="40" y="50" text-anchor="middle" fill="rgba(201,169,78,0.8)" font-size="36">🦅</text>
+  </svg>
+  <h1>Memória Viva</h1>
+  <p class="subtitle">Preservar a história do Glorioso</p>
+  <p>
+    Estamos a construir uma <strong>inteligência artificial que conhece a história do Benfica</strong> — 
+    para que nenhuma memória se perca. Se és benfiquista e tens conhecimento, 
+    histórias ou factos sobre o clube, a tua contribuição é preciosa.
+  </p>
+</div>
+
+<div class="form-container">
+
+  <!-- Step 1: Category -->
+  <div class="category-section" id="step-category">
+    <p class="section-label">Sobre o que queres partilhar?</p>
+    <p class="section-hint">Escolhe a categoria que melhor se encaixa. Podes fazer várias contribuições.</p>
+    <div class="categories" id="categories">
+      <div class="category-btn" data-cat="facto_historico" onclick="selectCategory(this)">
+        <span class="cat-icon">📜</span>
+        <div class="cat-text">
+          <span class="cat-name">Facto histórico</span>
+          <span class="cat-desc">Datas, eventos, resultados, decisões marcantes</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="jogador" onclick="selectCategory(this)">
+        <span class="cat-icon">⚽</span>
+        <div class="cat-text">
+          <span class="cat-name">Jogador ou treinador</span>
+          <span class="cat-desc">Biografia, carreira, anedotas, contributo</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="epoca" onclick="selectCategory(this)">
+        <span class="cat-icon">🏆</span>
+        <div class="cat-text">
+          <span class="cat-name">Época ou competição</span>
+          <span class="cat-desc">Campeonatos, taças, campanhas europeias</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="estadio" onclick="selectCategory(this)">
+        <span class="cat-icon">🏟️</span>
+        <div class="cat-text">
+          <span class="cat-name">Estádio ou instalações</span>
+          <span class="cat-desc">Luz antiga, Luz nova, outros campos, Seixal</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="cultura" onclick="selectCategory(this)">
+        <span class="cat-icon">❤️</span>
+        <div class="cat-text">
+          <span class="cat-name">Cultura benfiquista</span>
+          <span class="cat-desc">Tradições, cânticos, o que é ser Benfica</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="modalidades" onclick="selectCategory(this)">
+        <span class="cat-icon">🤾</span>
+        <div class="cat-text">
+          <span class="cat-name">Modalidades</span>
+          <span class="cat-desc">Hóquei, andebol, voleibol, futsal, atletismo...</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="dirigentes" onclick="selectCategory(this)">
+        <span class="cat-icon">🎩</span>
+        <div class="cat-text">
+          <span class="cat-name">Presidentes e dirigentes</span>
+          <span class="cat-desc">Mandatos, decisões, legado</span>
+        </div>
+      </div>
+      <div class="category-btn" data-cat="outro" onclick="selectCategory(this)">
+        <span class="cat-icon">💡</span>
+        <div class="cat-text">
+          <span class="cat-name">Outro</span>
+          <span class="cat-desc">Algo que não encaixa nas categorias acima</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Form Fields (shown after category) -->
+  <div id="form-fields" class="hidden">
+
+    <div class="form-section" style="animation-delay: 0s">
+      <label class="field-label" for="titulo">Título da contribuição</label>
+      <p class="field-hint">Um título curto que descreva o que vais partilhar.</p>
+      <input type="text" id="titulo" class="field-input" placeholder="Ex: A chegada de Eusébio ao Benfica em 1960">
+    </div>
+
+    <div class="form-section" style="animation-delay: 0.08s">
+      <label class="field-label">Época ou período</label>
+      <p class="field-hint">Seleciona o(s) período(s) relevante(s). Podes selecionar vários.</p>
+      <div class="era-grid" id="eras">
+        <span class="era-pill" onclick="toggleEra(this)">1900s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1910s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1920s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1930s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1940s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1950s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1960s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1970s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1980s</span>
+        <span class="era-pill" onclick="toggleEra(this)">1990s</span>
+        <span class="era-pill" onclick="toggleEra(this)">2000s</span>
+        <span class="era-pill" onclick="toggleEra(this)">2010s</span>
+        <span class="era-pill" onclick="toggleEra(this)">2020s</span>
+        <span class="era-pill" onclick="toggleEra(this)">Geral / atemporal</span>
+      </div>
+    </div>
+
+    <div class="form-section" style="animation-delay: 0.16s">
+      <label class="field-label" for="conteudo">A tua contribuição</label>
+      <p class="field-hint">Escreve tudo o que souberes sobre este tema. Quanto mais detalhe, melhor — 
+        datas, nomes, locais, contexto. Não te preocupes com a forma, o importante é o conteúdo.</p>
+      <textarea id="conteudo" class="field-textarea large" 
+        placeholder="Escreve aqui a tua contribuição...&#10;&#10;Exemplo: Em dezembro de 1960, Eusébio da Silva Ferreira chegou a Lisboa vindo de Moçambique. O Sporting também o queria contratar e houve uma disputa entre os dois clubes..."></textarea>
+    </div>
+
+    <div class="form-section" style="animation-delay: 0.24s">
+      <label class="field-label" for="fonte">Fonte (opcional)</label>
+      <p class="field-hint">De onde vem esta informação? Livro, testemunho pessoal, familiar, documentário, etc.</p>
+      <input type="text" id="fonte" class="field-input" placeholder="Ex: Contado pelo meu avô que era sócio desde 1952">
+    </div>
+
+    <div class="form-section" style="animation-delay: 0.32s">
+      <label class="field-label" for="certeza">Grau de certeza</label>
+      <p class="field-hint">Ajuda-nos a saber quão fiável é esta informação.</p>
+      <select id="certeza" class="field-select">
+        <option value="">Seleciona...</option>
+        <option value="factual">Factual — tenho a certeza, é verificável</option>
+        <option value="quase_certo">Quase certo — estou bastante confiante</option>
+        <option value="memoria">Memória — é o que me recordo, pode ter imprecisões</option>
+        <option value="ouvir_dizer">Ouvi dizer — foi-me contado, não posso confirmar</option>
+      </select>
+    </div>
+
+    <div class="form-section" style="animation-delay: 0.4s">
+      <label class="field-label" for="nome">O teu nome (opcional)</label>
+      <p class="field-hint">Se quiseres ser creditado na base de dados. Podes deixar em branco.</p>
+      <input type="text" id="nome" class="field-input" placeholder="Ex: João, sócio nº 12345">
+    </div>
+
+    <div class="submit-section" style="animation: fadeInUp 0.4s 0.48s ease forwards; opacity: 0;">
+      <button class="submit-btn" id="submitBtn" onclick="submitContribution()">
+        Enviar contribuição
+      </button>
+      <p class="submit-note">
+        A tua contribuição será revista antes de ser adicionada à base de conhecimento do Memória Viva.
+        <br>Obrigado por ajudares a preservar a história do Glorioso. 🦅
+      </p>
+    </div>
+  </div>
+
+  <!-- Success State -->
+  <div id="success" class="hidden">
+    <div class="success-message">
+      <div class="check">✓</div>
+      <h2>Obrigado, Benfiquista!</h2>
+      <p>
+        A tua contribuição foi recebida e será revista em breve.
+        Cada memória partilhada torna o Memória Viva mais completo.
+      </p>
+      <button class="another-btn" onclick="resetForm()">Fazer outra contribuição</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>
+    <strong>Memória Viva</strong> é um projeto comunitário e independente, criado por benfiquistas para benfiquistas.
+    <br>Sem fins comerciais. Apenas amor ao clube.
+  </p>
+  <p class="lema">E Pluribus Unum</p>
+</div>
+
+<script>
+  let selectedCategory = null;
+  let selectedEras = [];
+
+  function selectCategory(el) {
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCategory = el.dataset.cat;
+
+    // Show form fields
+    const fields = document.getElementById('form-fields');
+    if (fields.classList.contains('hidden')) {
+      fields.classList.remove('hidden');
+      // Re-trigger animations
+      fields.querySelectorAll('.form-section').forEach(s => {
+        s.style.opacity = '0';
+        void s.offsetWidth; // force reflow
+        s.style.opacity = '';
+      });
+    }
+  }
+
+  function toggleEra(el) {
+    el.classList.toggle('selected');
+    const era = el.textContent;
+    if (selectedEras.includes(era)) {
+      selectedEras = selectedEras.filter(e => e !== era);
+    } else {
+      selectedEras.push(era);
+    }
+  }
+
+  async function submitContribution() {
+    const titulo = document.getElementById('titulo').value.trim();
+    const conteudo = document.getElementById('conteudo').value.trim();
+    const fonte = document.getElementById('fonte').value.trim();
+    const certeza = document.getElementById('certeza').value;
+    const nome = document.getElementById('nome').value.trim();
+
+    if (!selectedCategory || !titulo || !conteudo) {
+      alert('Por favor preenche pelo menos a categoria, o título e a contribuição.');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'A enviar...';
+
+    const contribution = {
+      categoria: selectedCategory,
+      titulo,
+      periodos: selectedEras,
+      conteudo,
+      fonte: fonte || null,
+      certeza: certeza || null,
+      nome: nome || 'Anónimo',
+      data_submissao: new Date().toISOString(),
+      estado: 'pendente' // pendente → aprovado → ingerido
+    };
+
+    // ============================================================
+    // CONFIGURAÇÃO SUPABASE
+    // Substitui estes valores pelos teus:
+    // ============================================================
+    const SUPABASE_URL = 'https://vvhsznybadqvzdpqnroo.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2aHN6bnliYWRxdnpkcHFucm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjcwOTYsImV4cCI6MjA4OTUwMzA5Nn0.SBHjkA-C8FimYVTJNf-uID-Xo7dvEEl-_hvVAr0t7hY';
+    const TABLE_NAME = 'community_contributions';
+
+    try {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(contribution)
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      // Show success
+      document.getElementById('step-category').classList.add('hidden');
+      document.getElementById('form-fields').classList.add('hidden');
+      document.getElementById('success').classList.remove('hidden');
+
+    } catch (err) {
+      console.error('Erro ao enviar:', err);
+      
+      // Fallback: download como JSON se Supabase não estiver configurado
+      const blob = new Blob([JSON.stringify(contribution, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contribuicao-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      document.getElementById('step-category').classList.add('hidden');
+      document.getElementById('form-fields').classList.add('hidden');
+      document.getElementById('success').classList.remove('hidden');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Enviar contribuição';
+  }
+
+  function resetForm() {
+    selectedCategory = null;
+    selectedEras = [];
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.era-pill').forEach(p => p.classList.remove('selected'));
+    document.getElementById('titulo').value = '';
+    document.getElementById('conteudo').value = '';
+    document.getElementById('fonte').value = '';
+    document.getElementById('certeza').value = '';
+    document.getElementById('nome').value = '';
+
+    document.getElementById('success').classList.add('hidden');
+    document.getElementById('form-fields').classList.add('hidden');
+    document.getElementById('step-category').classList.remove('hidden');
+  }
+</script>
+
+</body>
+</html>
